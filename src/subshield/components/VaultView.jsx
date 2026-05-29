@@ -1,4 +1,4 @@
-import { AlertTriangle, Check, Send, Upload, Zap } from "lucide-react";
+import { AlertTriangle, Check, Send, Sparkles, Upload, Zap } from "lucide-react";
 import { policyIcon } from "../icons.js";
 import { formatLongDate, formatMoney, getStatus } from "../utils.js";
 import { Section, Info, Spinner } from "./Layout.jsx";
@@ -30,7 +30,7 @@ export default function VaultView({
             <p>
               {critical.length
                 ? `${critical.length} polic${critical.length === 1 ? "y is" : "ies are"} critical. Renew before routing new COI packages.`
-                : "All required policies are current and ready for routing."}
+                : "All required policies are current, verified, and ready to route to any GC or client."}
             </p>
             <div className="ss-row">
               <button className="ss-button" onClick={onSend}>
@@ -40,13 +40,22 @@ export default function VaultView({
                 <Upload size={16} /> Add document
               </button>
             </div>
+            <div className="ss-trust-strip" aria-label="SubShield workflow benefits">
+              <span><Sparkles size={14} /> Upload once</span>
+              <span><Check size={14} /> Verify documents</span>
+              <span><Send size={14} /> Send anywhere</span>
+            </div>
           </div>
           <ScoreRing value={score} />
         </div>
       </section>
 
       <section className="ss-card">
-        <Section title="Insurance vault" sub={`${docs} verified files`} />
+        <Section
+          title="Insurance vault"
+          sub={`${docs} verified files`}
+          extra={<span className="ss-live-pill">Live vault</span>}
+        />
         {policies.map((policy) => (
           <PolicyRow
             key={policy.id}
@@ -100,6 +109,9 @@ function PolicyDetail({ policy, onRenew, onShop, onSend, isRenewing, isShopping 
   const status = getStatus(policy.daysRemaining);
   const width = `${Math.max(5, Math.min(100, (policy.daysRemaining / 180) * 100))}%`;
   const isCritical = status.className === "danger";
+  const primaryAction = isCritical
+    ? "Renew this policy before sending new packages."
+    : "This policy is ready for package routing.";
 
   return (
     <div>
@@ -113,6 +125,14 @@ function PolicyDetail({ policy, onRenew, onShop, onSend, isRenewing, isShopping 
           <p className="ss-muted">
             {policy.carrier} · {policy.policyNumber}
           </p>
+        </div>
+      </div>
+
+      <div className="ss-next-action">
+        <span className={`ss-action-dot ${status.className}`} />
+        <div>
+          <b>Recommended next step</b>
+          <small>{primaryAction}</small>
         </div>
       </div>
 
