@@ -23,11 +23,19 @@ export default function SendModal({
   const handleSend = async () => {
     if (sending) return;
     setSending(true);
-    await new Promise((r) => setTimeout(r, 700));
-    onSend();
+    try {
+      await new Promise((r) => setTimeout(r, 700));
+      const didSend = onSend();
+      if (!didSend) {
+        setSending(false);
+      }
+    } catch {
+      setSending(false);
+    }
   };
 
-  const firstName = contractor.contact.split(" ")[0] || "team";
+  const firstName =
+    contractor.contact?.trim().split(/\s+/).filter(Boolean)[0] || "team";
   const coverEmail =
     `To: ${contractor.email}\n` +
     `Subject: COI Package — ${finalProject}\n\n` +
