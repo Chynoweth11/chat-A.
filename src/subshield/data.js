@@ -1,11 +1,3 @@
-/**
- * Initial mock data for the SubShield prototype.
- *
- * In a production build this would come from an authenticated API.
- * In prototype mode it loads on first run and is persisted to localStorage
- * after any user action (see utils.js readStoredData / writeStoredData).
- */
-
 export const initialData = {
   policies: [
     {
@@ -16,7 +8,7 @@ export const initialData = {
       policyNumber: "WC-90183321",
       daysRemaining: 4,
       premium: 3210,
-      limit: "Statutory / $1M employer liability",
+      limit: "Statutory / \$1M employer liability",
       expires: "2026-06-01",
       statusNote: "Critical. Renew before sending new COI packages.",
       documents: ["WC certificate", "Waiver of Subrogation"],
@@ -29,7 +21,7 @@ export const initialData = {
       policyNumber: "GL-44827193",
       daysRemaining: 45,
       premium: 1840,
-      limit: "$2M aggregate / $1M occurrence",
+      limit: "\$2M aggregate / \$1M occurrence",
       expires: "2026-07-06",
       statusNote: "Inside the renewal planning window.",
       documents: ["GL certificate", "Additional Insured", "Waiver of Subrogation"],
@@ -42,7 +34,7 @@ export const initialData = {
       policyNumber: "CA-55120984",
       daysRemaining: 120,
       premium: 2460,
-      limit: "$1M combined single limit",
+      limit: "\$1M combined single limit",
       expires: "2026-09-24",
       statusNote: "Active and ready for routing.",
       documents: ["Auto certificate", "Additional Insured"],
@@ -72,7 +64,7 @@ export const initialData = {
       delivery: "TrustLayer portal + email copy",
       holder: "Turner Construction Company\n375 Hudson Street\nNew York, NY 10014",
       requirements:
-        "Requires $2M umbrella and primary non-contributory wording on GL.",
+        "Requires \$2M umbrella and primary non-contributory wording on GL.",
       projects: ["Downtown Marriott Remodel", "Westside School District"],
     },
     {

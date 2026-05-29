@@ -1,106 +1,174 @@
-# SubShield
+# SubShield - Insurance Compliance Vault
 
-A frontend prototype for a subcontractor insurance compliance product:
-a secure vault for original carrier-issued documents, a GC directory with
-saved certificate-holder details, and 1-tap COI routing.
+A modern React application for subcontractors to manage insurance policies, track compliance, and route COI packages to general contractors.
 
-Built with **React 19 + Vite 6**. No backend — all state persists to
-`localStorage` until you wire up real auth and storage.
+**Built with:** React 19 + Vite 6 + Lucide Icons
 
----
-
-## Quick start
+## Quick Start
 
 ```bash
+# Install dependencies
 npm install
+
+# Start dev server
 npm run dev
-```
 
-Then open the URL Vite prints (usually `http://localhost:5173`).
-
-## Build for production
-
-```bash
+# Build for production
 npm run build
-npm run preview
 ```
 
-## Lint
+## Features
+
+✅ **Policy Vault**
+- Track multiple insurance policies
+- Real-time compliance scoring
+- Document verification and storage
+- Policy renewal tracking
+
+✅ **GC Directory**
+- Save contractor details and certificate holders
+- One-tap COI routing
+- Project history and delivery preferences
+
+✅ **COI Management**
+- Review packages before sending
+- Email preview with cover letter
+- Activity tracking and logging
+
+✅ **Data Persistence**
+- LocalStorage integration
+- Automatic save on every action
+- One-click reset to demo state
+
+✅ **Responsive Design**
+- Mobile (≤560px)
+- Tablet (≤900px)  
+- Desktop (1240px max-width)
+
+✅ **Accessibility**
+- ARIA labels and roles
+- Keyboard navigation (ESC to close modals)
+- Screen reader support
+
+## Architecture
+
+```
+src/
+├── main.jsx                    React entry point
+├── App.jsx                     Root component
+└── subshield/
+    ├── SubShieldComplete.jsx   State orchestrator
+    ├── data.js                 Mock data and seed state
+    ├── utils.js                Helper functions (storage, scoring, formatting)
+    ├── icons.js                Icon mappings
+    ├── styles.css              Complete design system
+    └── components/
+        ├── Layout.jsx          Sidebar, header, navigation
+        ├── VaultView.jsx       Policy list and detail
+        ├── ContractorsView.jsx GC directory
+        ├── ActivityView.jsx    Event log
+        ├── ProfileView.jsx     Account and settings
+        ├── Modal.jsx           Base modal component
+        ├── SendModal.jsx       COI package review
+        ├── ScanModal.jsx       Document upload
+        ├── AddGCModal.jsx      New contractor form
+        ├── EditHolderModal.jsx Edit contractor
+        ├── SuccessModal.jsx    Send confirmation
+        ├── ScoreRing.jsx       SVG compliance ring
+        └── CopyButton.jsx      Clipboard utility
+```
+
+## State Management
+
+All state is managed in `SubShieldComplete.jsx` using React hooks:
+- `useState` for local state (view, modals, selections)
+- `useMemo` for derived values (score, docs, critical policies)
+- `useEffect` for side effects (selector validation, toast cleanup, localStorage)
+
+No external state library needed for this prototype.
+
+## Data Model
+
+### Policies
+```javascript
+{
+  id: string,
+  type: 'workers' | 'liability' | 'auto' | 'umbrella' | 'license',
+  name: string,
+  carrier: string,
+  policyNumber: string,
+  daysRemaining: number,
+  expires: string (ISO),
+  premium: number,
+  limit: string,
+  statusNote: string,
+  documents: string[]
+}
+```
+
+### Contractors (GCs)
+```javascript
+{
+  id: string,
+  name: string,
+  initials: string,
+  contact: string,
+  email: string,
+  delivery: string,
+  holder: string,
+  requirements: string,
+  projects: string[]
+}
+```
+
+### Activity
+```javascript
+{
+  id: string,
+  title: string,
+  body: string,
+  time: string
+}
+```
+
+## Styling
+
+All styles in `src/subshield/styles.css`:
+- Design tokens (colors, shadows, radii)
+- CSS custom properties for easy theming
+- Mobile-first responsive breakpoints
+- Smooth animations and transitions
+
+## Production Roadmap
+
+When ready to ship, add:
+- [ ] Real authentication (Clerk, Supabase)
+- [ ] Backend API (Node.js, Python, etc.)
+- [ ] Database (PostgreSQL, MongoDB)
+- [ ] PDF upload to S3 or R2
+- [ ] OCR / document extraction
+- [ ] Email delivery (SendGrid, Resend)
+- [ ] Stripe billing
+- [ ] E2E tests (Playwright, Cypress)
+- [ ] Audit logging
+
+## Development
 
 ```bash
+# Lint check
 npm run lint
+
+# Format code (add prettier if needed)
+npx prettier --write .
 ```
 
----
+## Browser Support
 
-## Project structure
+- Chrome/Edge (latest)
+- Firefox (latest)
+- Safari (latest)
+- Mobile browsers
 
-```
-subshield/
-├── index.html                       Entry HTML + Inter font
-├── package.json
-├── vite.config.js
-├── eslint.config.js
-├── docs/
-│   └── PROJECT_STATUS.md            Live status of features & next work
-└── src/
-    ├── App.jsx                      Mounts the orchestrator
-    ├── main.jsx                     React root
-    └── subshield/
-        ├── SubShieldComplete.jsx    Orchestrator (state + routing)
-        ├── data.js                  Initial mock data
-        ├── utils.js                 Pure helpers (storage, scoring, dates)
-        ├── icons.js                 Policy → icon mapping
-        ├── styles.css               Unified design system
-        └── components/
-            ├── Layout.jsx           Sidebar, Header, Brand, NavButton, Section, Info, Spinner
-            ├── VaultView.jsx        Score, policy list, policy detail, documents
-            ├── ContractorsView.jsx  GC directory list with edit & send
-            ├── ActivityView.jsx     Activity feed
-            ├── ProfileView.jsx      Company stats + settings + reset
-            ├── Modal.jsx            Accessible base modal (ESC + backdrop + focus)
-            ├── SendModal.jsx        Review & route COI package
-            ├── ScanModal.jsx        Vault a new carrier document
-            ├── SuccessModal.jsx     Post-send confirmation
-            ├── AddGCModal.jsx       Add new GC form
-            └── EditHolderModal.jsx  Edit / remove GC form
-```
+## License
 
----
-
-## Features working today
-
-| Area                | Status                                                |
-| ------------------- | ----------------------------------------------------- |
-| Policy vault        | ✅ Loaded from `data.js`, persisted to localStorage   |
-| Compliance score    | ✅ Recomputed live from policy days remaining         |
-| Renew policy        | ✅ With loading state, computed expiry, activity log  |
-| Lower bill          | ✅ Switches carrier with savings calc + activity log  |
-| Vault document      | ✅ Scan modal adds (or updates) the umbrella policy   |
-| GC directory        | ✅ Browse, send, edit, remove, add new                |
-| COI package preview | ✅ Choose GC, project, see review + cover email       |
-| Send package        | ✅ Loading state, activity log, success modal, toast  |
-| Activity log        | ✅ Latest 30 events, persisted                        |
-| Profile + reset     | ✅ Confirmation flow + toast                          |
-| Local persistence   | ✅ `subshield.complete.v2` key in localStorage        |
-| Toasts              | ✅ Auto-dismiss after 3.2s                            |
-| Keyboard / a11y     | ✅ ESC closes modals, aria labels, focus on close     |
-| Responsive          | ✅ Tablet (≤900px) and phone (≤560px) breakpoints     |
-
----
-
-## Backend / production work
-
-These are intentionally out of scope for the frontend prototype:
-
-- Real authentication (Clerk, Supabase Auth, etc.)
-- Actual PDF upload to object storage (S3, R2)
-- OCR / document extraction service (real metadata parsing)
-- Outbound email delivery (Resend, Postmark, SendGrid)
-- Database tables for policies, contractors, projects, activity
-- Audit logs for compliance traceability
-- Stripe billing
-- E2E tests
-
-The state shape in `data.js` and the helpers in `utils.js` are designed to
-map 1:1 onto API endpoints when the backend is added.
+MIT
