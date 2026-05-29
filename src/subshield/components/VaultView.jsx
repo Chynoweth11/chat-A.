@@ -4,6 +4,65 @@ import { formatLongDate, formatMoney, getStatus } from "../utils.js";
 import { Section, Info, Spinner } from "./Layout.jsx";
 import ScoreRing from "./ScoreRing.jsx";
 
+const realAppStyles = {
+  trustStrip: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: 8,
+    marginTop: 18,
+  },
+  trustPill: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    border: "1px solid rgba(184,117,5,.14)",
+    background: "rgba(255,255,255,.66)",
+    color: "#5f6673",
+    borderRadius: 999,
+    padding: "7px 10px",
+    fontSize: 12,
+    fontWeight: 850,
+    boxShadow: "0 8px 18px rgba(20,22,27,.05)",
+  },
+  livePill: {
+    display: "inline-flex",
+    alignItems: "center",
+    border: "1px solid rgba(11,127,93,.16)",
+    background: "#eaf7f1",
+    color: "#0b7f5d",
+    borderRadius: 999,
+    padding: "6px 10px",
+    fontSize: 11,
+    fontWeight: 950,
+    textTransform: "uppercase",
+    letterSpacing: ".06em",
+  },
+  nextAction: {
+    display: "flex",
+    alignItems: "flex-start",
+    gap: 10,
+    border: "1px solid rgba(229,223,211,.9)",
+    background: "linear-gradient(145deg,#fff,#fbf8f1)",
+    borderRadius: 18,
+    padding: 13,
+    margin: "14px 0 16px",
+    boxShadow: "0 10px 24px rgba(20,22,27,.05)",
+  },
+  actionDot: {
+    width: 10,
+    height: 10,
+    borderRadius: "50%",
+    marginTop: 4,
+    flex: "0 0 auto",
+  },
+};
+
+function dotColor(className) {
+  if (className === "danger") return { background: "#cf3f35", boxShadow: "0 0 0 5px rgba(207,63,53,.12)" };
+  if (className === "warning") return { background: "#c47a07", boxShadow: "0 0 0 5px rgba(196,122,7,.12)" };
+  return { background: "#0b7f5d", boxShadow: "0 0 0 5px rgba(11,127,93,.11)" };
+}
+
 export default function VaultView({
   score,
   docs,
@@ -40,10 +99,10 @@ export default function VaultView({
                 <Upload size={16} /> Add document
               </button>
             </div>
-            <div className="ss-trust-strip" aria-label="SubShield workflow benefits">
-              <span><Sparkles size={14} /> Upload once</span>
-              <span><Check size={14} /> Verify documents</span>
-              <span><Send size={14} /> Send anywhere</span>
+            <div style={realAppStyles.trustStrip} aria-label="SubShield workflow benefits">
+              <span style={realAppStyles.trustPill}><Sparkles size={14} /> Upload once</span>
+              <span style={realAppStyles.trustPill}><Check size={14} /> Verify documents</span>
+              <span style={realAppStyles.trustPill}><Send size={14} /> Send anywhere</span>
             </div>
           </div>
           <ScoreRing value={score} />
@@ -54,7 +113,7 @@ export default function VaultView({
         <Section
           title="Insurance vault"
           sub={`${docs} verified files`}
-          extra={<span className="ss-live-pill">Live vault</span>}
+          extra={<span style={realAppStyles.livePill}>Live vault</span>}
         />
         {policies.map((policy) => (
           <PolicyRow
@@ -128,11 +187,11 @@ function PolicyDetail({ policy, onRenew, onShop, onSend, isRenewing, isShopping 
         </div>
       </div>
 
-      <div className="ss-next-action">
-        <span className={`ss-action-dot ${status.className}`} />
+      <div style={realAppStyles.nextAction}>
+        <span style={{ ...realAppStyles.actionDot, ...dotColor(status.className) }} />
         <div>
           <b>Recommended next step</b>
-          <small>{primaryAction}</small>
+          <small style={{ display: "block", color: "#667085", lineHeight: 1.4, marginTop: 3 }}>{primaryAction}</small>
         </div>
       </div>
 
